@@ -1,0 +1,30 @@
+ID: 1
+Nombre: juabn
+Apellido Paterno: askbnd
+Apellido Materno: asdmkan
+Telefono: 2828383710
+------------------------
+ID: 2
+Nombre: Juan
+Apellido Paterno: Perez
+Apellido Materno: knasjkd
+Telefono: 2938218911
+------------------------
+ID: 3
+Nombre: Meli
+Apellido Paterno: njasd
+Apellido Materno: nibis
+Telefono: 2929292828
+------------------------
+ID: 4
+Nombre: Hector
+Apellido Paterno: bsdujfbjds
+Apellido Materno: nsdkbnjs
+Telefono: 3939393928
+------------------------
+ID: 5
+Nombre: Pablo
+Apellido Paterno: bjabsjb
+Apellido Materno: bjbja
+Telefono: 3923929302
+------------------------

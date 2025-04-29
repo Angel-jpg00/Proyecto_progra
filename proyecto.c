@@ -57,7 +57,7 @@ void validar_numero(char *cadena, char *destino){
         for (int i = 0; destino[i] != '\0' ; i++){
             if (!isdigit(destino[i])) {//Si el carácter NO es un numero, entonces hay un error      
                 printf("Datos invalidos\n"
-                "Solo se aceptan numeros, ingrese nuevamente los datos por favor.\n");//regresa que encontor un caracter invalido
+                "Solo se aceptan numeros, ingrese nuevamente los datos por favor.\n");//regresa que enconto un caracter invalido
                 validar = 0;
                 break;
             }
@@ -79,34 +79,64 @@ void ingresar_datos(struct directorio *alumnos, int id){
     verificar_datos("Apellido paterno", alumnos->apellido);
     verificar_datos("Apellido materno", alumnos->apellidoM);
     validar_numero("Numero Telefonico", alumnos->tel);
+    //printf("Direccion: ");
+    //scanf("%d", &alumnos->tel); // & necesario para el entero
     printf("\n");
 
 }
 
+int encontrar_id(){//esto es para saber el ultimo id ingresado
+    FILE *archivo = fopen("contactos.txt", "r");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return 1;
+    }
+
+    char linea[100];
+    int ultimo_id = 1; 
+    while (fgets(linea, sizeof(linea), archivo) != NULL) {
+        // Eliminar salto de línea
+        linea[strcspn(linea, "\n")] = '\0';
+
+        // Buscar si la línea empieza con "id:"
+        if (strstr(linea, "ID: ") == linea) {
+            int id = atoi(linea + 4); // Convertir a entero el caracter
+            ultimo_id = id + 1; // Guardamos el último id
+        }
+    }
+
+    fclose(archivo);
+    return ultimo_id;
+}
+
 
 int main(){
-    int option = 0, contactos = 0, conta = 0, capacidad = 10;
+    int option = 0, contactos = 0, conta = 0, capacidad = 10, ultimo_id;
     struct directorio *alumnos = malloc(sizeof(struct directorio) * capacidad); //memoria dinamica
     //struct directorio alumnos[10]; para memoria estatica
 
     do{
-       option = menu();
+        option = menu();
+        FILE *archivo = fopen("contactos.txt", "a"); // Modo append (agregar al final)
+        if (archivo == NULL) {
+            printf("Error al abrir el archivo.\n");
+            break;
+        }
+
        switch (option){
             case 1:
                 printf("Cuantos contactos deseas agregar?:");
                 scanf("%d", &contactos);
+
+                ultimo_id = encontrar_id();
+
                 for (int i = 0; i < contactos; i++){
-                    ingresar_datos(&alumnos[conta], conta + 1);
+                    ingresar_datos(&alumnos[conta], ultimo_id);
+                    ultimo_id ++;
                     conta++;
                 }
 
-                FILE *archivo = fopen("contactos.txt", "a"); // Modo append (agregar al final)
-                if (archivo == NULL) {
-                    printf("Error al abrir el archivo.\n");
-                    break;
-                }
-
-                for (int i = conta - contactos; i < conta; i++) {
+                for (int i = 0; i < conta; i++) {
                     fprintf(archivo, "ID: %d\n", alumnos[i].id);
                     fprintf(archivo, "Nombre: %s\n", alumnos[i].name);
                     fprintf(archivo, "Apellido Paterno: %s\n", alumnos[i].apellido);
@@ -124,14 +154,14 @@ int main(){
                 {
                     FILE *archivo = fopen("contactos.txt", "r");
                     if (archivo == NULL) {
-                        printf("No hay contactos registrados aún.\n");
+                        printf("No hay contactos registrados aun.\n");
                         break;
                     }
-                
-                    printf("\n=== LISTA DE CONTACTOS ===\n\n");
-                    
+
+                    printf("\n=== LISTA DE CONTACTOS ===\n\n"); 
                     int contacto_actual = 0;
-                    char linea[100];
+                    char linea[50];
+
                     while (fgets(linea, sizeof(linea), archivo) != NULL) {
                         // Si la línea es un separador, incrementar contador
                         if (strstr(linea, "---") != NULL) {
