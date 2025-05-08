@@ -484,8 +484,9 @@ void eliminar_datos() {
             printf("\nContacto encontrado para eliminacion:\n");
             printf("Matricula: %d\n", temp.matricula);
             printf("Nombre: %s\n", temp.name);
-        } else {
-            //escribe el registro en el archivo temporal y verifica si la escritura fue exitosa
+        }else{
+            //Si el alumno no es el buscado, entonces hace lo siguiente.
+            //escribe el registro actual en el archivo temporal:
             if (fwrite(&temp, sizeof(struct directorio), 1, temp_archivo) != 1){
                 printf("\nError durante la escritura\n");
                 fclose(archivo);
@@ -495,7 +496,8 @@ void eliminar_datos() {
             }
             contactos_restantes++;
         }
-    }   
+    }
+    
     fclose(archivo);
     fclose(temp_archivo);
 
