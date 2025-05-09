@@ -41,7 +41,7 @@ void imprimir_alumno(const struct directorio *temp){//struct directorio: Tipo de
 }
 
 int menu(){
-    int option = 0;
+    int opcion = 0;
     do{
     printf(
         "\n---------- A G E N D A - D I G I T A L ----------\n"
@@ -52,15 +52,15 @@ int menu(){
         "4.- Modificar o eliminar alumno\n"
         "5.- Ordenar contacto\n:"
     );
-    scanf("%d", &option);
-    }while(option < 1 || option > 5);
-    return option;
+    scanf("%d", &opcion);
+    }while(opcion < 1 || opcion > 5);
+    return opcion;
 }
 
 void validar_numero(const char *mensaje, int *destino, int longitud_minima){
-    //int *destino: Puntero a un entero donde se guardará el valor validado.
-    //int longitud_minima: Longitud mínima requerida para el número (ej: 10 para teléfonos).
-    char buffer[11];//buffer[11]: Arreglo de caracteres para almacenar temporalmente la entrada del usuario (tamaño 11 para números de hasta 10 dígitos 
+    //int *destino: Puntero a un entero donde se guardara el valor validado.
+    //int longitud_minima: Longitud minima requerida para el numero (ej: 10 para teléfonos).
+    char buffer[11];//buffer[11]: Arreglo de caracteres para almacenar temporalmente la entrada del usuario (tamaño 11 para numeros de hasta 10 digitos 
     int valido;
 
     do{
@@ -70,25 +70,25 @@ void validar_numero(const char *mensaje, int *destino, int longitud_minima){
         limpiar_buffer();
 
         //Validar que todos los caracteres sean digitos
-        for(int i = 0; buffer[i] != '\0'; i++){//for: Recorre cada carácter en buffer hasta encontrar \0 (fin de la cadena).
-                if (!isdigit((unsigned char)buffer[i])){//isdigit: Verifica si el carácter es un dígito (0-9).
+        for(int i = 0; buffer[i] != '\0'; i++){//for: Recorre cada caracter en buffer hasta encontrar \0 (fin de la cadena).
+                if (!isdigit((unsigned char)buffer[i])){//isdigit: Verifica si el carácter es un digito (0-9).
                 printf("Datos invalidos. Solo se aceptan numeros.\n");
                 valido = 0;
                 break;
             }
         }
 
-        if (strcmp(mensaje, "Telefono: ") == 0){//strcmp: Compara el mensaje con "Telefono: " para aplicar validación solo a teléfonos
-            // Validar longitud mínima 10
+        if (strcmp(mensaje, "Telefono: ") == 0){//strcmp: Compara el mensaje con "Telefono: " para aplicar validacion solo a telefonos
+            // Validar longitud minima 10
             if(valido && longitud_minima > 0 && strlen(buffer) < (size_t)longitud_minima){
-                //valido: Solo verifica longitud si los caracteres son dígitos.
-                //strlen(buffer) < longitud_minima: Comprueba que la entrada tenga suficientes dígitos.
+                //valido: Solo verifica longitud si los caracteres son digitos.
+                //strlen(buffer) < longitud_minima: Comprueba que la entrada tenga suficientes digitos.
                 printf("Se requieren al menos %d dígitos.\n", longitud_minima);
                 valido = 0;
             }
         }
         if(valido){
-            *destino = atoi(buffer);//atoi: Convierte la cadena numérica en buffer a un entero (int).
+            *destino = atoi(buffer);//atoi: Convierte la cadena numerica en buffer a un entero (int).
             //Guarda el resultado en la dirección apuntada por destino (modificando la variable original)
         }
     }while(!valido);
@@ -96,40 +96,36 @@ void validar_numero(const char *mensaje, int *destino, int longitud_minima){
 }
 
 void verificar_datos(const char *mensaje, char *destino, size_t tamano) {
-    char buffer[50];//buffer[100]: Buffer temporal para almacenar la entrada del usuario
+    char buffer[90];//Buffer temporal para almacenar la entrada del usuario
     int valido;
     
     do {
         valido = 1;
         printf("%s", mensaje);
-        fgets(buffer, sizeof(buffer), stdin);
-        //fgets() lee la entrada de forma segura 
-        // Elimina el \n solo si existe
-        buffer[strcspn(buffer, "\n")] = '\0';
-        //buffer: Arreglo de caracteres (array) donde se almacenará lo que el usuario escriba
+        fgets(buffer, sizeof(buffer), stdin);//fgets() lee la entrada de forma segura 
+        buffer[strcspn(buffer, "\n")] = '\0';//Elimina el \n solo si existe
+        //buffer: Arreglo de caracteres (array) donde se almacenara lo que el usuario escriba
 
-        // Validar que no esté vacío
+        // Validar que no este vacio
         if(strlen(buffer) == 0){
             printf("Por favor, escriba algo.\n");
             valido = 0;
             continue;
         }
-
         /*
         Validar caracteres
         Codigo verifica que una cadena de texto solo contenga letras y espacios.
-        size_t:Indica explícitamente que i se usa para manejar 
-            tamaños/posiciones (no para cálculos matemáticos genéricos).
+        size_t:Indica explicitamente que i se usa para manejar tamaños/posiciones (no para calculos matematicos).
         */
         for(size_t i = 0; buffer[i] != '\0'; i++){   
-            //buffer[i] != '\0', El bucle continúa mientras no lleguemos al final de la cadena
+            //buffer[i] != '\0', El bucle continua mientras no lleguemos al final de la cadena
             /*
             que hace? -> !isalpha((unsigned char)buffer[i]):
-            buffer[i]: Obtiene el carácter en posición i (como char)
-            (unsigned char): Convierte el carácter a su equivalente sin signo (0-255)
+            buffer[i]: Obtiene el caracter en posicion i (como char)
+            (unsigned char): Convierte el caracter a su equivalente sin signo (0-255)
             */     
             if(!isalpha((unsigned char)buffer[i]) && buffer[i] != ' '){
-                //isalpha():Función que verifica si un carácter es alfabético (A-Z, a-z)
+                //isalpha():Funcion que verifica si un caracter es alfabetico (A-Z, a-z)
                 //Devuelve verdadero si es una letra   
                 printf("Solo se permiten letras y espacios.\n");
                 valido = 0;
@@ -142,14 +138,14 @@ void verificar_datos(const char *mensaje, char *destino, size_t tamano) {
             /*
             como se usa? -> 
             destino: Donde queremos copiar el texto
-            buffer: De donde copiamos el texto (lo que escribió el usuario)
-            tamano-1: Cantidad máxima de caracteres a copiar (menos 1 para dejar espacio al \0)
+            buffer: De donde copiamos el texto (lo que escribio el usuario)
+            tamano-1: Cantidad maxima de caracteres a copiar (menos 1 para dejar espacio al \0)
             */
             destino[tamano-1] = '\0';
             /*
             destino[tamano-1] = '\0'
-            Asegura que la cadena termine correctamente con carácter nulo
-            Esto es importante porque strncpy no siempre añade el \0 automáticamente
+            Asegura que la cadena termine correctamente con caracter nulo
+            Esto es importante porque strncpy no siempre añade el \0 automaticamente
             */
         }
     }while(!valido);
@@ -181,19 +177,19 @@ void busqueda_datos(const char *campo_buscado) {
 
     printf("Ingresa el %s que deseas buscar: ", campo_buscado);
     fgets(busqueda, sizeof(busqueda), stdin);
-    busqueda[strcspn(busqueda, "\n")] = '\0';//quitar salto de línea
+    busqueda[strcspn(busqueda, "\n")] = '\0';//quitar salto de linea
      /*
     Que hace el while?:
-    Lee cada registro del archivo uno por uno, Compara según el campo especificado (campo_buscado)
+    Lee cada registro del archivo uno por uno, compara segun el campo especificado (campo_buscado)
     
-    fread() es como sacar una foto del álbum
-    El bucle while sigue sacando fotos mientras haya más en el álbum
+    fread() es como sacar una foto del album
+    El bucle while sigue sacando fotos mientras haya mas en el album
     Cuando no quedan fotos, el bucle se detiene
     */
     while(fread(&temp, sizeof(struct directorio), 1, archivo)){
         /*
         Como funciona fread()?: 
-        &temp: Dirección de memoria donde se almacenará el registro leído
+        &temp: Direccion de memoria donde se almacenara el registro leido
         sizeof(struct directorio): Tamaño en bytes de cada registro
         1: Cantidad de registros a leer en cada operación
         archivo: Puntero al archivo binario abierto previamente
@@ -209,7 +205,7 @@ void busqueda_datos(const char *campo_buscado) {
         else if(strcmp(campo_buscado, "Apellido Paterno") == 0 && strcmp(temp.apellido, busqueda) == 0) coincidencia = 1;
         else if(strcmp(campo_buscado, "Apellido Materno") == 0 && strcmp(temp.apellidoM, busqueda) == 0) coincidencia = 1;
         else if(strcmp(campo_buscado, "Telefono") == 0){
-            //Creamnos un buffer temporal (telefono_busqueda) para almacenar el teléfono como cadena
+            //Creamnos un buffer temporal (telefono_busqueda) para almacenar el telefono como cadena
             //snprintf() convierte el entero temp.tel a string de forma segura:
             char telefono_buscado[11];
             //strcmp() devuelve 0 cuando son exactamente iguales
@@ -367,12 +363,12 @@ void editar_datos(){
             /*Volver al inicio de ese registro
             //fseek() mueve el puntero del archivo:
             //-sizeof(struct directorio): Retrocede el tamaño de un registro
-            //SEEK_CUR: Desde la posición actual
-            //Esta instrucción rebobina el puntero del archivo exactamente un registro hacia atrás 
+            //SEEK_CUR: Desde la posicion actual
+            //Esta instruccion rebobina el puntero del archivo exactamente un registro hacia atras 
             para posicionarse al inicio del registro que acabamos de leer y queremos modificar.
             */
             fseek(archivo, (long)(-sizeof(struct directorio)), SEEK_CUR);
-            //fseek(): Función estándar de C para mover el puntero de posición en un archivo
+            //fseek(): Función estandar de C para mover el puntero de posicion en un archivo
             /*
             archivo: El puntero FILE* del archivo abierto
             (long)(-sizeof(struct directorio)): Distancia a mover (en bytes)
@@ -409,14 +405,14 @@ void eliminar_datos(){
     }
 
     FILE *temp_archivo = fopen("temp.dat", "wb");
-    if (!temp_archivo){//Verifica si el archivo temporal se creó correctamente.
+    if (!temp_archivo){//Verifica si el archivo temporal se creo correctamente.
         printf("\nError: No se pudo crear archivo temporal\n");
         fclose(archivo);
         return;
     }
 
     while(fread(&temp, sizeof(struct directorio), 1, archivo) == 1){//lee los registros del archivo uno por uno
-        if(temp.matricula == matricula_buscada){//Compara la matrícula del registro actual con la matrícula buscada
+        if(temp.matricula == matricula_buscada){//Compara la matricula del registro actual con la matricula buscada
             printf("\nContacto encontrado para eliminacion:\n");
             printf("Matricula: %d\n", temp.matricula);
             printf("Nombre: %s\n", temp.name);
@@ -482,7 +478,7 @@ void ordenarDatos(struct directorio *alumnos){
                     for (int j = i + 1; j < conta; j++){
                         //Compara nombres con strcmp()
                         if (strcmp(alumnos[i].name, alumnos[j].name) > 0){
-                            //Intercambia registros si están en orden incorrecto
+                            //Intercambia registros si estan en orden incorrecto
                             struct directorio temp = alumnos[i];
                             alumnos[i] = alumnos[j];
                             alumnos[j] = temp;
@@ -490,12 +486,12 @@ void ordenarDatos(struct directorio *alumnos){
                     }
                 }
                 break;
-            case 2:  // Ordenar por teléfono
+            case 2:  // Ordenar por telefono
                 for (int i = 0; i < conta - 1; i++){
                     for (int j = i + 1; j < conta; j++){
-                        //Comparamos directamente los valores numéricos de teléfono
+                        //Comparamos directamente los valores numericos de telefono
                         if (alumnos[i].tel > alumnos[j].tel){
-                            //Intercambiamos registros si están en orden
+                            //Intercambiamos registros si estan en orden
                             struct directorio temp = alumnos[i];
                             alumnos[i] = alumnos[j];
                             alumnos[j] = temp;
@@ -508,7 +504,7 @@ void ordenarDatos(struct directorio *alumnos){
                 continue;
         }
 
-        // Escribir los contactos ordenados en el archivo binario
+        //Escribe los contactos ordenados en el archivo binario
         archivo = fopen("contactos.dat", "wb");
         if (archivo == NULL){
             printf("Error al escribir el archivo binario.\n");
