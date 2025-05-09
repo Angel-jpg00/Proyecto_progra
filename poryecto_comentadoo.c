@@ -53,7 +53,7 @@ int menu(){
         "5.- Ordenar contacto\n:"
     );
     scanf("%d", &option);
-    }while(option<1 || option>5);
+    }while(option < 1 || option > 5);
     return option;
 }
 
@@ -66,7 +66,7 @@ void validar_numero(const char *mensaje, int *destino, int longitud_minima){
     do{
         valido = 1;
         printf("%s", mensaje);
-        scanf("%11s", buffer);//Leer como cadena
+        scanf("%11s", buffer);//Lee como cadena
         limpiar_buffer();
 
         //Validar que todos los caracteres sean digitos
@@ -87,44 +87,27 @@ void validar_numero(const char *mensaje, int *destino, int longitud_minima){
                 valido = 0;
             }
         }
-
-        // Convertir a entero si todo está bien
-        if (valido) {
+        if(valido){
             *destino = atoi(buffer);//atoi: Convierte la cadena numérica en buffer a un entero (int).
             //Guarda el resultado en la dirección apuntada por destino (modificando la variable original)
         }
-    } while (!valido);
+    }while(!valido);
 
 }
 
 void verificar_datos(const char *mensaje, char *destino, size_t tamano) {
-    char buffer[100];//buffer[100]: Buffer temporal para almacenar la entrada del usuario
+    char buffer[50];//buffer[100]: Buffer temporal para almacenar la entrada del usuario
     int valido;
     
     do {
         valido = 1;
         printf("%s", mensaje);
-        fgets(buffer, sizeof(buffer), stdin);//fgets() lee la entrada de forma segura 
+        fgets(buffer, sizeof(buffer), stdin);
+        //fgets() lee la entrada de forma segura 
         // Elimina el \n solo si existe
         buffer[strcspn(buffer, "\n")] = '\0';
         //buffer: Arreglo de caracteres (array) donde se almacenará lo que el usuario escriba
-        //sizeof(buffer):Especifica el tamaño máximo a leer
-        //sizeof(buffer):calcula automáticamente el tamaño del array
-        //stdin: es un puntero a FILE* que representa la entrada del teclado
 
-        size_t len = strlen(buffer);//Esta línea calcula la longitud (cantidad de caracteres) del texto que está almacenado en buffer y guarda ese número en la variable len.
-        //significa "tamaño de tipo" (size type), Es un tipo de variable especial para guardar tamaños y longitudes
-        //strlen() cuenta los caracteres "visibles" + \n si existen
-
-        //Este if que hace?: Cuando el usuario escribe algo y presiona Enter, se agrega un \n (salto de línea) al final
-        //Este código busca y elimina ese \n reemplazándolo con \0 (fin de cadena)
-        if(len > 0 && buffer[len-1] == '\n'){
-            //Si es \n, lo cambia por \0
-            buffer[len-1] = '\0';
-        }else if (len == sizeof(buffer) - 1){//Manejar líneas muy largas, detecta cuando el usuario escribio más texto del que cabe en el buffer
-            limpiar_buffer();
-        }
-        
         // Validar que no esté vacío
         if(strlen(buffer) == 0){
             printf("Por favor, escriba algo.\n");
@@ -132,8 +115,12 @@ void verificar_datos(const char *mensaje, char *destino, size_t tamano) {
             continue;
         }
 
-        //Validar caracteres
-        //Codigo verifica que una cadena de texto solo contenga letras y espacios.
+        /*
+        Validar caracteres
+        Codigo verifica que una cadena de texto solo contenga letras y espacios.
+        size_t:Indica explícitamente que i se usa para manejar 
+            tamaños/posiciones (no para cálculos matemáticos genéricos).
+        */
         for(size_t i = 0; buffer[i] != '\0'; i++){   
             //buffer[i] != '\0', El bucle continúa mientras no lleguemos al final de la cadena
             /*
@@ -221,13 +208,13 @@ void busqueda_datos(const char *campo_buscado) {
         //Puntero a la posición donde se encontró (verdadero)
         else if(strcmp(campo_buscado, "Apellido Paterno") == 0 && strcmp(temp.apellido, busqueda) == 0) coincidencia = 1;
         else if(strcmp(campo_buscado, "Apellido Materno") == 0 && strcmp(temp.apellidoM, busqueda) == 0) coincidencia = 1;
-        else if(strcmp(campo_buscado, "Telefono") == 0) {
-            //Creamnoa un buffer temporal (telefono_str) para almacenar el teléfono como cadena
+        else if(strcmp(campo_buscado, "Telefono") == 0){
+            //Creamnos un buffer temporal (telefono_busqueda) para almacenar el teléfono como cadena
             //snprintf() convierte el entero temp.tel a string de forma segura:
-            char telefono_str[11];
+            char telefono_buscado[11];
             //strcmp() devuelve 0 cuando son exactamente iguales
-            snprintf(telefono_str, sizeof(telefono_str), "%d", temp.tel);
-            if(strcmp(telefono_str, busqueda) == 0) coincidencia = 1;
+            snprintf(telefono_buscado, sizeof(telefono_buscado), "%d", temp.tel);
+            if(strcmp(telefono_buscado, busqueda) == 0) coincidencia = 1;
         }
         else if(strcmp(campo_buscado, "Matricula") == 0 && temp.matricula == atoi(busqueda)) coincidencia = 1;  
         if(coincidencia){
@@ -269,7 +256,7 @@ void busqueda_alumno(){
     scanf(" %c", &condicion);//El espacio antes de %c limpia el espacion en blanco
     limpiar_buffer();
 
-    if(tolower(condicion) == 's'){//Convierte a minusculas y compara
+    if(tolower(condicion) == 's'){//tolower convierte a minuscula la variable y compara
         system("cls");
         busqueda_alumno();  
     }
@@ -287,7 +274,8 @@ void mostrar_datos(){
 
     printf("=== LISTA DE CONTACTOS ===\n");
 
-    while(fread(&temp, sizeof(struct directorio), 1, archivo)){//con la estructura temp guarda los datos del archivo bninario y los imprime en la forma de la estructura.
+    while(fread(&temp, sizeof(struct directorio), 1, archivo)){
+    //con la estructura temp guarda los datos del archivo bninario y los imprime en la forma de la estructura.
         imprimir_alumno(&temp);
         printf("------------------------\n");
         contacto_actual++;
@@ -400,24 +388,22 @@ void editar_datos(){
             break;
             }
     }
-
-    if (!encontrado){
+    if(!encontrado){
         printf("No se encontró ningún alumno con ID %d.\n", matricula);
     }
-
     fclose(archivo);
 }
 
 void eliminar_datos(){
-    int matricula_buscada;
+    int matricula_buscada,contactos_restantes = 0;;
     struct directorio temp;//un directorio temporal
 
     printf("Ingrese la Matricula del alumno que desea eliminar: ");
     scanf("%d", &matricula_buscada);
-    while (getchar() != '\n');
+    while(getchar() != '\n');
 
     FILE *archivo = fopen("contactos.dat", "rb");
-    if (!archivo){
+    if(!archivo){
         printf("\nError: No se puede acceder al archivo de contactos\n");
         return;
     }
@@ -429,7 +415,6 @@ void eliminar_datos(){
         return;
     }
 
-    int contactos_restantes = 0;
     while(fread(&temp, sizeof(struct directorio), 1, archivo) == 1){//lee los registros del archivo uno por uno
         if(temp.matricula == matricula_buscada){//Compara la matrícula del registro actual con la matrícula buscada
             printf("\nContacto encontrado para eliminacion:\n");
@@ -466,8 +451,8 @@ void eliminar_datos(){
 }
 
 void ordenarDatos(struct directorio *alumnos){
-    char again;
-    int orderOption = 0, conta = 0;
+    char opcion2;
+    int opcion = 0, conta = 0;
 
     FILE *archivo = fopen("contactos.dat", "rb");
     if (archivo == NULL){
@@ -489,9 +474,9 @@ void ordenarDatos(struct directorio *alumnos){
 
     do {
         printf("\nPor que campo desea ordenar?\n1. Nombre\n2. Telefono\n: ");
-        scanf(" %d", &orderOption);
+        scanf(" %d", &opcion);
 
-        switch (orderOption) {
+        switch (opcion) {
             case 1:  // Ordenar por nombre
                 for (int i = 0; i < conta - 1; i++){
                     for (int j = i + 1; j < conta; j++){
@@ -529,6 +514,7 @@ void ordenarDatos(struct directorio *alumnos){
             printf("Error al escribir el archivo binario.\n");
             return;
         }
+
         //Escribe todos los registros ordenados de vuelta al archivo
         fwrite(alumnos, sizeof(struct directorio), conta, archivo);
         fclose(archivo);
@@ -541,18 +527,18 @@ void ordenarDatos(struct directorio *alumnos){
 
         printf("Contactos ordenados: %d\n", conta);
         printf("Ordenar nuevamente? (y/n): ");
-        scanf(" %c", &again);
-    } while (again == 'y' || again == 'Y');
+        scanf(" %c", &opcion2);
+    } while (opcion2 == 'y' || opcion2 == 'Y');
 }
  
 int main(){
-    int option = 0, contactos = 0, conta = 0, capacidad = 10, opcion2=0;
-    struct directorio *alumnos = malloc(sizeof(struct directorio) * capacidad); //memoria dinamica
+    int opcion = 0, contactos = 0, conta = 0, capacidad = 10, opcion2=0;
+    struct directorio *alumnos = malloc(sizeof(struct directorio) * capacidad);//memoria dinamica
     //struct directorio alumnos[10]; para memoria estatica
 
     do{
-        option = menu();
-        switch (option){
+        opcion = menu();
+        switch (opcion){
             case 1:
                 FILE *archivo = fopen("contactos.dat", "ab");//Modo append (agregar al final)
                 if (archivo == NULL){
@@ -566,15 +552,19 @@ int main(){
                 for (int i = 0; i < contactos; i++){
                     if (conta >= capacidad){//condicion para aumentar la capacidad de alumnos si esta se ve rebasada
                         capacidad *= 2;
+                        //realloc para redimensionar memoria.
+                        //Temp necesario 
                         struct directorio *temp = realloc(alumnos, sizeof(struct directorio) * capacidad);
-                        if (!temp) {
+                        if (!temp){
                             printf("Error: No se pudo expandir la memoria.\n");
                             break;
                         }
+                        //actualiza el puntero principal, asegura que apunte a la nueva memoria redimensionada
                         alumnos = temp;
                     }
-                    ingresar_datos(&alumnos[conta]);//Escribe los datos en el archivo
-                    fwrite(&alumnos[conta], sizeof(struct directorio), 1, archivo);  // Guardar en archivo
+                    ingresar_datos(&alumnos[conta]);//guarda los datos que ingresa el usuario
+                    //Escribe el bloque de datos en el archivo binario. 
+                    fwrite(&alumnos[conta], sizeof(struct directorio), 1, archivo);//Guardar en archivo
                     conta++;
                 }
                 fclose(archivo);
@@ -611,7 +601,7 @@ int main(){
                 system("cls");
                 break;
        }
-    } while (option != 6);
+    } while (opcion != 6);
     free(alumnos);
     return 0;
 }
