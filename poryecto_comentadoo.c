@@ -5,11 +5,11 @@
 
 void limpieza(){
     int c;
-    //getchar(): Lee un carácter del búfer de entrada estándar (stdin).
-    //!= '\n': Compara si el carácter leído no es un salto de línea (Enter).
-    //!= EOF: Compara si el carácter leído no es el indicador de fin de archivo (End Of File)
-    while((c = getchar()) != '\n' && c != EOF); // Limpia el búfer
-    //El bucle continúa leyendo y descartando caracteres del búfer hasta que encuentre un \n (Enter) o EOF.
+    //getchar(): Lee un caracter del bufer de entrada estandar (stdin).
+    //!= '\n': Compara si el caracter leido no es un salto de linea (Enter).
+    //!= EOF: Compara si el caracter leido no es el indicador de fin de archivo (End Of File)
+    while((c = getchar()) != '\n' && c != EOF); // Limpia el bufer
+    //El bucle continua leyendo y descartando caracteres del bufer hasta que encuentre un \n (Enter) o EOF.
     printf("Presione Enter para regresar al menu...");
     getchar();//Ahora sí espera Enter real
 }
@@ -21,7 +21,7 @@ void limpiar_buffer(){
 
 typedef struct directorio{ 
     int matricula;
-    char name[50];// 50 para evitar desbordamiento
+    char name[50];//50 para evitar desbordamiento
     char apellido[50];
     char apellidoM[50];
     int tel;
